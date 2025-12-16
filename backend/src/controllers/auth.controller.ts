@@ -10,6 +10,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
 } from "../utils/generateTokenWithCookies.js";
+import { errorResponse, successResponse } from "../utils/response.js";
 
 export async function registerUser(
   req: Request<{}, {}, RegisterUserDTO>,
@@ -186,5 +187,41 @@ export async function refreshToken(req: Request, res: Response) {
     return res
       .status(403)
       .json({ success: false, message: "An error occurred while decoding" });
+  }
+}
+
+export async function verifyToken(req: Request, res: Response) {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    console.error("refresh token not found");
+    return errorResponse(res, 401, "refreshToken not found");
+  }
+
+  const jwtSecret = process.env.JWT_SECRET as string;
+
+  if (!jwtSecret) {
+    console.error("jwt secret has not been configured");
+    return errorResponse(res, 500, "jwt secret has not been configured");
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, jwtSecret) as { id: number };
+    const [client] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, decoded.id));
+
+    if (!client) {
+      return errorResponse(res, 401, "User not found");
+    }
+
+    successResponse(res, 200, "User is authenticated", {
+      ...client,
+      password: null,
+    });
+  } catch (error) {
+    console.error("An error occurred while decoding");
+    return errorResponse(res, 401, "An error occurred while decoding");
   }
 }
