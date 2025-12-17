@@ -9,7 +9,7 @@ import SignUp from "./pages/Auth/SignUp";
 import ResetPassword from "./pages/Auth/ResetPassword";
 import Home from "./pages/Dashboard/Home";
 import LandingPage from "./pages/LandingPage";
-import DashboardLayout from "./layouts/DashboardLayout";
+import DashboardLayout from "./components/layouts/DashboardLayout";
 import Income from "./pages/Dashboard/Income";
 import Expense from "./pages/Dashboard/Expense";
 import Settings from "./pages/Dashboard/Settings";
