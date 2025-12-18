@@ -10,7 +10,7 @@ export const useErrorHandler = () => {
       setError(null);
     }, 5000);
 
-    return () => clearInterval(timer);
+    return () => clearTimeout(timer);
   }, [error]);
 
   return { error, setError };

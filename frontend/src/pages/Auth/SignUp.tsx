@@ -24,7 +24,13 @@ const SignUp = () => {
     e.preventDefault();
     const email = user.email;
     const password = user.password.trim();
-    const avatar = profile;
+    const fullName = user.fullName;
+
+    let avatar = "";
+
+    if (!fullName) {
+      setError("Enter your name");
+    }
 
     if (!ValidateEmail(email)) {
       setError("Enter a valid email");

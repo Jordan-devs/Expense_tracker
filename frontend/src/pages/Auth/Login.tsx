@@ -64,12 +64,26 @@ const Login = () => {
             LOGIN
           </button>
 
-          <p className="text-[14px] text-slate-800 mt-3">
-            Don't have an account?{" "}
-            <Link to={"/signup"} className="font-medium text-primary underline">
-              SignUp
-            </Link>
-          </p>
+          <div className="flex justify-between items-center mt-3">
+            <p className="text-[14px]">
+              {" "}
+              <Link
+                to={"/reset-password"}
+                className="font-medium text-primary underline"
+              >
+                Forgot Password
+              </Link>
+            </p>
+            <p className="text-[14px] text-slate-800">
+              Don't have an account?{" "}
+              <Link
+                to={"/signup"}
+                className="font-medium text-primary underline"
+              >
+                SignUp
+              </Link>
+            </p>
+          </div>
         </form>
       </div>
     </AuthLayout>
