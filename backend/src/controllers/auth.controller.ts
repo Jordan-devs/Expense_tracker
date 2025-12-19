@@ -23,6 +23,11 @@ export async function registerUser(
 
   const jwtSecret = process.env.JWT_SECRET as string;
 
+  if (!username || !email || !password) {
+    errorResponse(res, 400, "All fields are required");
+    return;
+  }
+
   if (!jwtSecret) {
     console.error("jwt secret not configured");
     return res
@@ -108,6 +113,11 @@ export async function loginUser(req: Request<{}, {}, LoginDTO>, res: Response) {
 
   const jwtSecret = process.env.JWT_SECRET as string;
 
+  if (!email || !password) {
+    errorResponse(res, 400, "All fields are required");
+    return;
+  }
+
   if (!jwtSecret) {
     console.error("jwt secret not configured");
     return res
@@ -190,38 +200,18 @@ export async function refreshToken(req: Request, res: Response) {
   }
 }
 
-export async function verifyToken(req: Request, res: Response) {
-  const refreshToken = req.cookies.refreshToken;
-
-  if (!refreshToken) {
-    console.error("refresh token not found");
-    return errorResponse(res, 401, "refreshToken not found");
-  }
-
-  const jwtSecret = process.env.JWT_SECRET as string;
-
-  if (!jwtSecret) {
-    console.error("jwt secret has not been configured");
-    return errorResponse(res, 500, "jwt secret has not been configured");
-  }
+export async function getUserInfo(req: Request, res: Response) {
+  const id = req.userId!;
 
   try {
-    const decoded = jwt.verify(refreshToken, jwtSecret) as { id: number };
-    const [client] = await db
-      .select()
-      .from(users)
-      .where(eq(users.id, decoded.id));
+    const [userInfo] = await db.select().from(users).where(eq(users.id, id));
 
-    if (!client) {
-      return errorResponse(res, 401, "User not found");
-    }
-
-    successResponse(res, 200, "User is authenticated", {
-      ...client,
+    successResponse(res, 200, "user data gotten", {
+      ...userInfo,
       password: null,
     });
   } catch (error) {
-    console.error("An error occurred while decoding");
-    return errorResponse(res, 401, "An error occurred while decoding");
+    console.error("An error occurred while fetching data");
+    errorResponse(res, 500, "An error occurred while fetching data");
   }
 }
