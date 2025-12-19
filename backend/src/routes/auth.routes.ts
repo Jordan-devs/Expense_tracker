@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-  getUserInfo,
+  getUser,
   loginUser,
   refreshToken,
   registerUser,
@@ -16,6 +16,6 @@ router.post("/signup", upload.single("avatar"), registerUser);
 
 router.post("/refresh", refreshToken);
 
-router.get("/verify-auth", authMiddleware, getUserInfo);
+router.get("/verify-auth", authMiddleware, getUser);
 
 export default router;

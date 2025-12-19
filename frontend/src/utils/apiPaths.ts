@@ -2,7 +2,7 @@ export const BASE_URL = "http://localhost:8000";
 
 export const API_PATHS = {
   AUTH: {
-    LOGIN: "/api/auth/login",
-    SIGNUP: "api",
+    LOGIN: "/api/v1/auth/login",
+    SIGNUP: "api/v1/auth/signup",
   },
 };

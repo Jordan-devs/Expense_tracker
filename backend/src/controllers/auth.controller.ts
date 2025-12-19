@@ -200,11 +200,16 @@ export async function refreshToken(req: Request, res: Response) {
   }
 }
 
-export async function getUserInfo(req: Request, res: Response) {
-  const id = req.userId!;
+export async function getUser(req: Request, res: Response) {
+  const id = req.userId;
 
   try {
     const [userInfo] = await db.select().from(users).where(eq(users.id, id));
+
+    if (!userInfo) {
+      errorResponse(res, 404, "User does not exist");
+      return;
+    }
 
     successResponse(res, 200, "user data gotten", {
       ...userInfo,
