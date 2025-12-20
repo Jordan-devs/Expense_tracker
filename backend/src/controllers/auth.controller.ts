@@ -92,7 +92,7 @@ export async function registerUser(
     return res.status(201).json({
       success: true,
       message: "User successfully created",
-      user: {
+      data: {
         id: addUser.id,
         email: addUser.email,
         username: addUser.username,
@@ -153,7 +153,7 @@ export async function loginUser(req: Request<{}, {}, LoginDTO>, res: Response) {
     return res.status(200).json({
       success: true,
       message: "Login successful",
-      user: {
+      data: {
         id: checkUser.id,
         email: checkUser.email,
         username: checkUser.username,

@@ -12,10 +12,10 @@ const router = Router();
 
 router.post("/login", loginUser);
 
-router.post("/signup", upload.single("avatar"), registerUser);
+router.post("/register", upload.single("avatar"), registerUser);
 
 router.post("/refresh", refreshToken);
 
-router.get("/verify-auth", authMiddleware, getUser);
+router.get("/getUser", authMiddleware, getUser);
 
 export default router;
