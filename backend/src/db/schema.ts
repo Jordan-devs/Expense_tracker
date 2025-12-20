@@ -11,7 +11,7 @@ import {
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  email: varchar("email", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
   username: varchar("username", { length: 100 }).notNull(),
   avatarUrl: varchar("avatar_url", { length: 255 }),
   password: varchar("password", { length: 255 }).notNull(),
