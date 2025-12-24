@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import AuthLayout from "../../components/layouts/AuthLayout";
 import Input from "../../components/input/Input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ValidateEmail } from "../../utils/helper";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
+import { api } from "../../lib/api";
+import { API_PATHS } from "../../utils/apiPaths";
+import type { user } from "../../types/types";
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -12,6 +15,8 @@ const Login = () => {
   });
   const { error, setError } = useErrorHandler();
 
+  const navigate = useNavigate();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     setUser({ ...user, [name]: value });
@@ -19,7 +24,7 @@ const Login = () => {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const email = user.email;
+    const email = user.email.trim();
     const password = user.password.trim();
 
     if (!ValidateEmail(email)) {
@@ -29,6 +34,24 @@ const Login = () => {
 
     if (!password || password.length < 8) {
       setError("Password must be at least 8 characters long");
+      return;
+    }
+
+    try {
+      const userData = await api.post<user>(API_PATHS.AUTH.LOGIN, {
+        email: email,
+        password: password,
+      });
+
+      navigate("/dashboard");
+      return userData;
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An error occurred during login");
+      }
+      console.error("Login error", error);
     }
   };
   return (

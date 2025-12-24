@@ -7,7 +7,7 @@ export interface AuthLayoutTypes {
 }
 
 export interface InputTypes {
-  value: string | number | null;
+  value: string | number;
   placeholder: string;
   name: string;
   label: string;
@@ -34,10 +34,8 @@ export interface EmailUIProps {
 }
 
 export interface CodeUIProps {
-  code: string | null;
-  setCode: (code: string) => void;
   error: string | null;
-  handleCheckCode: (completedCode: string) => unknown;
+  handleCheckEmail: () => unknown;
 }
 
 export interface PasswordUIProps {
@@ -47,4 +45,11 @@ export interface PasswordUIProps {
   setPassword: (password: string) => void;
   setConfirmPassword: (password: string) => void;
   handleResetPassword: (e: React.FormEvent<HTMLFormElement>) => unknown;
+}
+
+export interface user {
+  email: string;
+  username: string;
+  id: number;
+  avatarUrl: string;
 }

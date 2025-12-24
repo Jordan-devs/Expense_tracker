@@ -7,14 +7,13 @@ import {
 import Login from "./pages/Auth/Login";
 import SignUp from "./pages/Auth/SignUp";
 import ResetPassword from "./pages/Auth/ResetPassword";
-
 import LandingPage from "./pages/LandingPage";
 import DashboardLayout from "./components/layouts/DashboardLayout";
 import Income from "./pages/Dashboard/Income";
 import Expense from "./pages/Dashboard/Expense";
 import Settings from "./pages/Dashboard/Settings";
 import Page404 from "./pages/Page404";
-import { verifyAuth } from "./utils/auth";
+import { authPageLoader, verifyAuth } from "./lib/auth";
 import Overview from "./pages/Dashboard/Overview";
 
 const App = () => {
@@ -22,8 +21,8 @@ const App = () => {
     createRoutesFromElements(
       <Route path="/">
         <Route index element={<LandingPage />} />
-        <Route path="login" element={<Login />} />
-        <Route path="signup" element={<SignUp />} />
+        <Route path="login" element={<Login />} loader={authPageLoader} />
+        <Route path="signup" element={<SignUp />} loader={authPageLoader} />
         <Route path="reset-password" element={<ResetPassword />} />
         <Route
           path="dashboard"

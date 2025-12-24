@@ -1,11 +1,8 @@
-import { OTPInput } from "input-otp";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import FakeDash from "../input/FakeDash";
-import Slot from "../input/Slot";
 import type { CodeUIProps } from "../../types/types";
 
-const CodeUI = ({ error, code, setCode, handleCheckCode }: CodeUIProps) => {
+const CodeUI = ({ error, handleCheckEmail }: CodeUIProps) => {
   const navigate = useNavigate();
 
   return (
@@ -19,37 +16,14 @@ const CodeUI = ({ error, code, setCode, handleCheckCode }: CodeUIProps) => {
       </button>
       <h3 className="text-[22px] font-semibold text-black">Email Sent</h3>
       <p className="text-sm text-slate-700 mt-1.25 mb-6 ">
-        Check your inbox for the code
+        An Email has been sent to your inbox check it now
       </p>
 
-      <form>
-        <OTPInput
-          onComplete={handleCheckCode}
-          onChange={setCode}
-          value={code ?? ""}
-          maxLength={6}
-          containerClassName="group flex items-center has-[:disabled]:opacity-30 mb-6"
-          render={({ slots }) => (
-            <div className="flex items-center">
-              <div className="flex gap-2">
-                {slots.slice(0, 3).map((slot, idx) => (
-                  <Slot key={idx} {...slot} />
-                ))}
-              </div>
+      {error && <p className="text-red-500 text-sm pb-2.5">{error}</p>}
 
-              <FakeDash />
-
-              <div className="flex gap-2">
-                {slots.slice(3).map((slot, idx) => (
-                  <Slot key={idx} {...slot} />
-                ))}
-              </div>
-            </div>
-          )}
-        />
-
-        {error && <p className="text-red-500 text-sm pb-2.5">{error}</p>}
-      </form>
+      <button className="btn-primary" onClick={handleCheckEmail}>
+        Open Email App
+      </button>
     </div>
   );
 };

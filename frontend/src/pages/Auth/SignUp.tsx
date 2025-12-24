@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import AuthLayout from "../../components/layouts/AuthLayout";
 import Input from "../../components/input/Input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ValidateEmail } from "../../utils/helper";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import AvatarSelector from "../../components/input/AvatarSelector";
+import { api } from "../../lib/api";
+import type { user } from "../../types/types";
+import { API_PATHS } from "../../utils/apiPaths";
 
 const SignUp = () => {
   const [profile, setProfile] = useState<File | null>(null);
@@ -15,6 +18,8 @@ const SignUp = () => {
   });
   const { error, setError } = useErrorHandler();
 
+  const navigate = useNavigate();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     setUser({ ...user, [name]: value });
@@ -22,14 +27,19 @@ const SignUp = () => {
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const email = user.email;
+    const email = user.email.trim();
     const password = user.password.trim();
-    const fullName = user.fullName;
+    const username = user.fullName;
+    const avatar = profile;
 
-    let avatar = "";
+    if (!avatar) {
+      setError("Choose a profile picture");
+      return;
+    }
 
-    if (!fullName) {
+    if (!username) {
       setError("Enter your name");
+      return;
     }
 
     if (!ValidateEmail(email)) {
@@ -39,6 +49,31 @@ const SignUp = () => {
 
     if (!password || password.length < 8) {
       setError("Password must be at least 8 characters long");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("username", username);
+
+      if (avatar) {
+        formData.append("avatar", avatar);
+      }
+
+      const userData = await api.post<user>(API_PATHS.AUTH.REGISTER, formData);
+
+      navigate("/dashboard");
+      return userData;
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An error occurred during registration");
+      }
+
+      console.error("Error", error);
     }
   };
 

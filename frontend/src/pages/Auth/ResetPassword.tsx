@@ -11,13 +11,10 @@ const ResetPassword = () => {
   const [step, setStep] = useState(1);
 
   const [email, setEmail] = useState<string>("");
-  const [code, setCode] = useState<string | null>(null);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const { error, setError } = useErrorHandler();
-
-  const expectedCode = "123456";
 
   const handleRequestCode = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,11 +27,8 @@ const ResetPassword = () => {
     setStep(2);
   };
 
-  const handleCheckCode = async (completedCode: string) => {
-    if (completedCode !== expectedCode) {
-      setError("Invalid Code");
-      return;
-    }
+  const handleCheckEmail = () => {
+    window.location.href = `mailto:${email}`;
 
     setStep(3);
   };
@@ -66,12 +60,7 @@ const ResetPassword = () => {
         />
       )}
       {step === 2 && (
-        <CodeUI
-          error={error}
-          setCode={setCode}
-          handleCheckCode={handleCheckCode}
-          code={code}
-        />
+        <CodeUI error={error} handleCheckEmail={handleCheckEmail} />
       )}
       {step === 3 && (
         <NewPasswordUI
